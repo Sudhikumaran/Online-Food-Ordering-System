@@ -1,7 +1,7 @@
 class Order:
     def __init__(self,items):
         self._items = items
-        self._total_amt = 0
+        self._total_amount = 0
         self._calculate_total()
 
     def _calculate_total(self):
