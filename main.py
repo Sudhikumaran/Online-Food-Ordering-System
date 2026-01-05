@@ -1,39 +1,7 @@
 from FoodItem import FoodItem
 from Order import Order
-from User import User
 from OrderService import OrderService
-
-def show_menu(menu):
-    print("\n--- MENU ---")
-    for idx, item in enumerate(menu, start=1):
-        print(f"{idx}. {item._name} - ₹{item.get_price()}")
-
-def take_order(menu):
-    selected_items = []
-    while True:
-        choice = input("Enter item number to add (or 'done' to finish): ")
-
-        if choice.lower() == "done":
-            break
-
-        if choice.isdigit():
-            index = int(choice) - 1
-            if 0 <= index < len(menu):
-                selected_items.append(menu[index])
-                print(f"{menu[index]._name} added")
-            else:
-                print("Invalid item number")
-        else:
-            print("Invalid input")
-
-    return selected_items
-
-
-# ----- START -----
-print("Welcome to Online Food Ordering System 🍔🍕")
-
-user_name = input("Enter your name: ")
-user = User(user_name)
+from CouponService import CouponService
 
 menu = [
     # 🍕 Pizzas
@@ -66,20 +34,53 @@ menu = [
     FoodItem("Ice Cream Sundae", 160)
 ]
 
+print("Welcome to Online Food Ordering System 🍔")
 
-show_menu(menu)
-items = take_order(menu)
+cart = {}
 
-if not items:
-    print("No items selected. Order cancelled.")
+print("\n--- MENU ---")
+for i, item in enumerate(menu, start=1):
+    print(f"{i}. {item.get_name()} - ₹{item.get_price()}")
+
+while True:
+    choice = input("\nEnter item number (or 'done'): ")
+
+    if choice.lower() == "done":
+        break
+
+    if not choice.isdigit():
+        print("Invalid input")
+        continue
+
+    index = int(choice) - 1
+    if index < 0 or index >= len(menu):
+        print("Invalid item number")
+        continue
+
+    qty = int(input("Enter quantity: "))
+    item = menu[index]
+
+    cart[item] = cart.get(item, 0) + qty
+    print(f"{item.get_name()} x {qty} added")
+
+if not cart:
+    print("No items selected. Exiting.")
     exit()
 
-order = Order(items)
+order = Order(cart)
+order.show_cart_summary()
+
+coupon = input("\nEnter coupon code (or press Enter to skip): ").upper()
+if coupon:
+    discount = CouponService.apply_coupon(coupon, order._total_amount)
+    order.apply_discount(discount)
+    print(f"Discount Applied: ₹{discount}")
+
+print(f"Final Amount: ₹{order.get_final_amount()}")
 
 print("\nChoose payment method:")
 print("1. UPI")
 print("2. CARD")
-
 payment_choice = input("Enter choice: ")
 
 payment_type = "UPI" if payment_choice == "1" else "CARD"
@@ -87,4 +88,5 @@ payment_type = "UPI" if payment_choice == "1" else "CARD"
 service = OrderService()
 service.process_order(order, payment_type)
 
-print("\nThank you for ordering! 🙌")
+print("\nFinal Order Status:", order.get_status().value)
+print("Thank you for ordering 🙌")
