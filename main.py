@@ -36,10 +36,36 @@ user_name = input("Enter your name: ")
 user = User(user_name)
 
 menu = [
-    FoodItem("Pizza", 250),
-    FoodItem("Burger", 150),
-    FoodItem("Pasta", 200)
+    # 🍕 Pizzas
+    FoodItem("Margherita Pizza", 220),
+    FoodItem("Farmhouse Pizza", 280),
+    FoodItem("Pepperoni Pizza", 320),
+
+    # 🍔 Burgers
+    FoodItem("Classic Veg Burger", 140),
+    FoodItem("Cheese Burger", 170),
+    FoodItem("Chicken Burger", 190),
+
+    # 🍝 Pasta
+    FoodItem("White Sauce Pasta", 210),
+    FoodItem("Red Sauce Pasta", 200),
+    FoodItem("Chicken Alfredo Pasta", 260),
+
+    # 🌮 Starters
+    FoodItem("French Fries", 120),
+    FoodItem("Garlic Bread", 150),
+    FoodItem("Chicken Wings", 280),
+
+    # 🥤 Beverages
+    FoodItem("Coca Cola", 60),
+    FoodItem("Cold Coffee", 110),
+    FoodItem("Fresh Lime Soda", 80),
+
+    # 🍰 Desserts
+    FoodItem("Chocolate Brownie", 140),
+    FoodItem("Ice Cream Sundae", 160)
 ]
+
 
 show_menu(menu)
 items = take_order(menu)
